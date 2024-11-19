@@ -1,0 +1,17 @@
+{
+    "vsmqtt.brokerProfiles": [
+        {
+            "name": "evink.cl",
+            "host": "mqtt.evink.cl",
+            "username": "<username>",
+            "password": "<password>",
+            "port": 1883
+        },
+        {
+            "name": "localhost",
+            "host": "localhost",
+            "port": 1883
+        }
+    ],
+    "nuxt.isNuxtApp": false
+}

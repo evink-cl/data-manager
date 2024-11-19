@@ -1,0 +1,44 @@
+name: Release
+
+on:
+    push:
+        branches:
+            - main
+
+jobs:
+    release:
+        runs-on: ubuntu-latest
+        permissions:
+            contents: write
+            packages: write
+            issues: write
+        steps:
+            - name: Checkout
+              uses: actions/checkout@v3
+              with:
+                  fetch-depth: 0 # Importante para que semantic-release acceda al historial completo de commits
+
+            - name: Setup Node.js
+              uses: actions/setup-node@v3
+              with:
+                  node-version: "20" # Usa la versión de Node.js adecuada
+                  cache: "npm"
+
+            - name: Configure npm for GitHub Packages
+              run: |
+                  echo "//npm.pkg.github.com/:_authToken=${{ secrets.NPM_TOKEN }}" > ~/.npmrc
+
+            - name: Install dependencies
+              run: npm install
+
+            # Paso para sincronizar la rama main con la versión remota
+            - name: Fetch all branches
+              run: git fetch --all
+
+            - name: Update local branch
+              run: git pull origin main
+
+            - name: Run semantic-release
+              env:
+                  GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+              run: npx semantic-release
